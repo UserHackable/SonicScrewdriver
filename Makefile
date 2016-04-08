@@ -19,7 +19,6 @@ github_token = $(shell git config github.token)
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
-
 # # STUFF YOU WILL NEED:
 # #  gerbv and eagle must be installed and must be in path.
 # 
@@ -110,6 +109,7 @@ README.md: Intro.md $(mds)
 %.md: %.png %_back.png %.GTL
 	echo "## $* \n\n" >  $@
 	gerber_board_size $*.GTL >> $@
+	echo "[gerbers](%*_gerber.zip)" >> $@
 	echo "\n\n| Front | Back |\n| --- | --- |\n| ![Front]($*.png) | ![Back]($*_back.png) |\n\n" >>  $@
 
 .gitignore:
@@ -156,18 +156,3 @@ clean_all: clean_gerbers clean_temps clean_pngs clean_zips clean_mds
 info:
 	echo $(github_user)
 
-
-
-#  # Get user input
-#  read "REPONAME?New repo name (enter for ${PWD##*/}):"
-#  read "USER?Git Username (enter for ${GITHUBUSER}):"
-#  read "DESCRIPTION?Repo Description:"
-#  
-#  echo "Here we go..."
-#  
-#  # Curl some json to the github API oh damn we so fancy
-#  
-#  # Set the freshly created repo to the origin and push
-#  # You'll need to have added your public key to your github account
-#  git remote set-url origin git@github.com:${USER:-${GITHUBUSER}}/${REPONAME:-${CURRENTDIR}}.git
-#  git push --set-upstream origin master
